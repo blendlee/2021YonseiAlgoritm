@@ -1,0 +1,16 @@
+s=list(str(input()))
+
+
+
+
+def find(s):
+    if len(s)==1:
+        return 'AKARAKA'
+    if s == list(reversed(s)):
+        s=s[:len(s)//2]
+        return find(s)
+
+    else:
+        return 'IPSELENTI'
+
+print(find(s))
