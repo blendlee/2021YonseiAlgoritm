@@ -1,0 +1,75 @@
+
+from collections import deque
+
+n=int(input())
+graph=[]
+for i in range(n):
+    graph.append(list(str(input())))
+visited=[[False]*n for _ in range(n)]
+
+dx=[1,0,-1,0]
+dy=[0,1,0,-1]
+
+direction=['UL','UR','RU','RD','DR','DL','LD','LU']
+
+
+fossil=[(-1,-1)]
+fossil_size=[0]
+for k in range(1,313):
+    size = 8*k**2+8*k+1 
+    fossil_size.append(size)
+
+
+
+
+k=0     
+center=[(-1,-1)]
+
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == '#':
+            k+=1
+            count=1
+            q=deque()
+            q.append((i,j,k))
+            visited[i][j]=True
+            graph[i][j]=k
+
+
+            while q:
+                x,y,k = q.popleft()
+                for t in range(4):
+                    nx =x+dx[t]
+                    ny=y+dy[t]
+                    if 0 <= nx < n and 0<=ny<n:
+                        if visited[nx][ny] == False and graph[nx][ny] == '#':
+                            visited[nx][ny]=True
+                            graph[nx][ny]=k
+                            count+=1
+                            q.append((nx,ny,k))
+
+            a=fossil_size.index(count)
+            center_x, center_y = i+2*a+1,j+2*a+1
+            center.append((center_x,center_y, a*4+1))
+
+ddx=[-2,-2,-1,1,2,2,1,-1]
+ddy=[-1,1,2,2,1,-1,-2,-2]
+result=[]
+
+
+for i in range(1,len(center)):
+    x,y,z= center[i]
+    for j in range(8):
+        nx = x-1+ ddx[j]
+        ny = y-1+ ddy[j]
+        if graph[nx][ny] != graph[x-1][y-1]:
+            result.append((x,y,z,direction[j]))
+    
+
+
+result.sort(key=lambda x : (x[0],x[1]))
+
+
+print(k)
+for x,y,z,dir in result:
+    print(x,y,z,dir)
